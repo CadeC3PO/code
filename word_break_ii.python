@@ -1,0 +1,65 @@
+#140. Word Break II   
+#Total Accepted: 77676
+#Total Submissions: 348972
+#Difficulty: Hard
+#Contributors: Admin
+#Given a non-empty string s and a dictionary wordDict containing a list of non-empty words, add spaces in s to construct a sentence where each word is a valid dictionary word. You may assume the dictionary does not contain duplicate words.
+
+#Return all such possible sentences.
+
+#For example, given
+#s = "catsanddog",
+#dict = ["cat", "cats", "and", "sand", "dog"].
+
+#A solution is ["cats and dog", "cat sand dog"].
+
+#UPDATE (2017/1/4):
+#The wordDict parameter had been changed to a list of strings (instead of a set of strings). Please reload the code definition to get the latest changes.
+
+class Solution(object):
+    def wordBreak(self, s, wordDict):
+        """
+        :type s: str
+        :type wordDict: List[str]
+        :rtype: List[str]
+        """
+        sentences = [[] for i in range(len(s))]
+        
+        wordLenList = set()
+        for word in wordDict:
+            wordLenList.add(len(word))
+        
+        #wordLenList = set(map(len, wordDict))
+        
+        #print wordLenList
+        
+        for startIndex in xrange(len(s) - 1, -1, -1):
+            #print startIndex
+            
+            for wordLen in wordLenList:
+                if startIndex + wordLen > len(s) or s[startIndex:startIndex + wordLen] not in wordDict:
+                    #print startIndex, wordLen, s[startIndex:startIndex + wordLen], "startIndex + wordLen is not in wordDict"
+                    continue
+                
+                #print startIndex, wordLen, s[startIndex:startIndex + wordLen], "startIndex + wordLen is in wordDict"
+                
+                if startIndex + wordLen == len(s):
+                    sentences[startIndex].append(s[startIndex:startIndex + wordLen])
+                    #print "terminating", sentences 
+                else:
+                    
+                    for sentence in sentences[startIndex + wordLen]:
+                        sentences[startIndex].append(s[startIndex: startIndex + wordLen] + " " + sentence)
+                    
+                    #print sentences
+                        
+        return sentences[0]
+
+def main():
+	s = "catsanddog"
+	wordDict = ["cat", "cats", "and", "sand", "dog"]
+	sol = Solution()
+	print sol.wordBreak(s, wordDict)
+
+if __name__=="__main__":
+	main()
